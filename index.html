@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+        section {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Goal Tracker</h1>
+    </header>
+    <section>
+        <h2>Goals</h2>
+        <ul>
+            <?php
+            // Connect to PostgreSQL database
+            $conn = pg_connect("dbname=your_database_name user=your_username password=your_password host=your_host port=5432");
+
+            // Check connection
+            if (!$conn) {
+                die("Connection failed: " . pg_last_error());
+            }
+
+            // Fetch goals from the database
+            $result = pg_query($conn, "SELECT * FROM goals");
+            if ($result) {
+                while ($row = pg_fetch_assoc($result)) {
+                    echo "<li>Date: " . $row['date'] . " - Target: " . $row['target'] . " - Rating: " . $row['rating'] . "</li>";
+                }
+            } else {
+                echo "Error fetching goals: " . pg_last_error();
+            }
+
+            // Close the connection
+            pg_close($conn);
+            ?>
+        </ul>
+    </section>
+</body>
+</html>
